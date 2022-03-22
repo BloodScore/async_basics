@@ -1,4 +1,17 @@
+import time
+
 from inspect import getgeneratorstate
+
+
+""" sub_generator and delegating generator (not coroutine) """
+# def sub_generator(string):
+#     for i in string:
+#         yield i
+#
+#
+# def delegator(g):
+#     for i in g('Dzmitry'):
+#         yield i
 
 
 def coroutine(func):
@@ -27,6 +40,7 @@ def sub_generator():
 # def delegator(g):
 #     while True:
 #         try:
+#             print('iteration of delegator')
 #             data = yield
 #             g.send(data)
 #         except StopIteration:
@@ -42,5 +56,15 @@ def sub_generator():
 """ Functionality of eternal cycle and g.send/throw """
 @coroutine
 def delegator(g):
-    message = yield from g
-    print(message)
+    try:
+        print('iteration of delegator')  # не печатается
+        message = yield from g
+        # print('HAHAHAHHA')
+        print('Message:', message)
+    except StopIteration:
+        print('Handled StopIteration in delegator')
+
+
+""" yield from can yield from any iterable object """
+def gen(string):
+    yield from string
